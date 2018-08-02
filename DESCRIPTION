@@ -1,0 +1,13 @@
+Package: bib2academic
+Type: Package
+Title: Convert BibTex to Markdown for the Hugo Academic Theme
+Version: 0.1.0
+Authors@R: as.person(c(
+    "Peter Baumgartner <peter.baumgartner@icloud.com> [aut, cre]", 
+    "Lorenzo Busseti <lbusett@gmail.com> [cbt]"
+  ))
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: CC BY-SA 4.0
+Encoding: UTF-8
+LazyData: true
