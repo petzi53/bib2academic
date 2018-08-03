@@ -1,0 +1,71 @@
+---
+title: "Introduction: How to Use the bib2academic Package?"
+author: "Peter Baumgartner"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using bib2academic}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Requirements:
+
++ You have already installed a blogdown project with the Hugo Academic theme. If you do not know what this means read the [Blogdown book](https://bookdown.org/yihui/blogdown/). In the following text I assume that you are comfortable with the Hugo Academic theme and the blogdown environment.
++ You have a valid bibtex file with your bibliography, e.g. it contains at least one full bibtex record. This file can have as many record as you want.
+
+## Preparations:
+
++ You need to create a folder where the created .md files should go.
++ If you also want to create for each bibtex record a .bib file, then you need to create a second folder for these files.
+
+I recommend not to use the folders where these file finally will live, e.g. `content/publication/` resp. `static/files/citations/. It is easier to recover you  work if something goes wrong in the conversion process. You don't have to search the generated files in your working folders, you just can empty or delete newly generated folders.
+
+## Call the `bib2acad` function:
+
+**The minimum call is:** `bib2acad("path/to/bibfile", "path/to/outfold")`.
+
+This generates the .md files with abstracts included and does not overwrite any files already in your folder `outfold`.
+
+**The maximum call is:** `bib2acad("path/to/bibfile", "path/to/outfold", "path/to/bibfold", copybib = "path/to/bibfold", abstract = TRUE, overwrite = TRUE)`.
+
+This generates the .md files with abstracts, generates also .bib files and does  overwrite files already generated in both folders (.md and .bib folder). This is not dangerous when you are working with folders especially created for this conversion process.
+
+For many files the conversion procedure may take some time. I have included a progressbar so that you can see if the program is working. For my 190 bibtex records the program the procedure needed about 45 seconds.
+
+## Install the conversion results:
+
+If everything went smoothly make a copy of your `static/files/citations/` and `content/publication` folder. Then copy your .bib files into `static/files/citations/` and your .md files into `content/publication`.
+
+To test if everything ic converted corretly you must rebuild the website. Call  the menu "Build -> More… -> Clean All" (or CTRL/CMD-SHIFT-B). Wait until the website is cleaned then call `blogdown:::serve:site()` or - if you have RStudio Addins installed: CTRL-S.
+
+Now your new data should be available.
+
+## Error handling:
+
+If you can't seen anymore your website but the directory index then something went wrong in the conversion procedure. The problem is that there is no error message in blogdown. You have to change to the terminal and call
+
+`hugo -v`
+
+directly. 
+
+Then you will get a more detailed report about. It maybe the case that you will get an error message simliar like the following:
+
+< ERROR 2018/08/03 10:45:45 failed to parse page metadata for "publication/2018-01-01_baumgartner_dataliteracy_2018.md": Near line 5 (last key parsed 'publication'): invalid escape character '&'; only the following escape characters are allowed: \b, \t, \n, \f, \r, \", \\,\uXXXX, and \UXXXXXXXX for publication/2018-01-01_baumgartner_dataliteracy_2018.md
+
+This means that hugo has found in the .md file an invalid character. In this case it was the ampersand. Go to the file and look for the specified line (in my case in line 5). Then you will see something like "\<special character>" (in my case: "\&"). Add another backlash. e.g. changing to "\\<special character>" (in my case: "\\&").
+
+The above example will now work out because I have added some error handling routines. But still there is a change that other invalid characters throw errors. My suggestion:
+
+1. Try to find and fix the problem in the file. Check it if everthing is ok now with rebuilding your website followend by serve_site().
+2. If you can't find the error most of the time problems appear in the `abstract` field. Try to delete this field (or repeat the conversion procedure with ´abstract = FALSE`). Again: Check it if everthing is ok now with rebuilding your website followend by serve_site().
+3. If the error still persists try to delete the file(s) your are suspecting to throw the error. And again: check if this was the problem with with rebuilding your website followend by serve_site(). This last procedure should help you to limit the problems to one or some files.
+4. If you could detect the error please [give me feedback](https://github.com/petzi53/bib2academic/issues/new) so that I could include an error handling routine for these cases. 
+5. If you cannot find the error please [open an issue on my GitHub site](https://github.com/petzi53/bib2academic/issues/new) and send my the files where you assume that the problems are generated.
