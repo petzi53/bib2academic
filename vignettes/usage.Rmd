@@ -2,11 +2,13 @@
 title: "Introduction: How to Use the bib2academic Package?"
 author: "Peter Baumgartner"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+#    pdf_document:
+    rmarkdown::html_vignette:
 vignette: >
   %\VignetteIndexEntry{Using bib2academic}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r setup, include = FALSE}
@@ -58,9 +60,15 @@ directly.
 
 Then you will get a more detailed report about. It maybe the case that you will get an error message simliar like the following:
 
-< ERROR 2018/08/03 10:45:45 failed to parse page metadata for "publication/2018-01-01_baumgartner_dataliteracy_2018.md": Near line 5 (last key parsed 'publication'): invalid escape character '&'; only the following escape characters are allowed: \b, \t, \n, \f, \r, \", \\,\uXXXX, and \UXXXXXXXX for publication/2018-01-01_baumgartner_dataliteracy_2018.md
-
-This means that hugo has found in the .md file an invalid character. In this case it was the ampersand. Go to the file and look for the specified line (in my case in line 5). Then you will see something like "\<special character>" (in my case: "\&"). Add another backlash. e.g. changing to "\\<special character>" (in my case: "\\&").
+```
+ERROR 2018/08/03 10:45:45 failed to parse page metadata for  
+publication/2018-01-01_baumgartner_dataliteracy_2018.md":  
+Near line 5 (last key parsed 'publication'): invalid escape character '&';  
+only the following escape characters are allowed:  
+\b, \t, \n, \f, \r, \", \\,\uXXXX, and \UXXXXXXXX   
+for publication/2018-01-01_baumgartner_dataliteracy_2018.md
+```
+This means that hugo has found in the .md file an invalid character. In this case it was the ampersand. Go to the file and look for the specified line (in my case in line 5). Then you will see something like `\<special character>` (in my case: `\&`). Add another backlash. e.g. changing to `\\<special character>` (in my case: `\\&`).
 
 The above example will now work out because I have added some error handling routines. But still there is a change that other invalid characters throw errors. My suggestion:
 
