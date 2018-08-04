@@ -4,7 +4,7 @@ Title: Convert BibTex to Markdown for the Hugo Academic Theme
 Version: 0.1.0.99
 Authors@R: as.person(c(
     "Peter Baumgartner <peter.baumgartner@icloud.com> [aut, cre]", 
-    "Lorenzo Busseti <lbusett@gmail.com> [ctb]"
+    "Lorenzo Busseto <lbusett@gmail.com> [ctb]"
   ))
 Description: Convert records of a BibTeX file (.bib) to separate .md files
     for the publications folder of the Hugo Academic Theme. Store optionally

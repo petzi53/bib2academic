@@ -7,11 +7,11 @@ vers <- paste("R package version", meta$Version)
 citEntry(entry	= "Manual",
          title	= "bib2academic: Convert BibTex to Markdown for the Hugo Academic Theme",
          author = c(person("Peter", "Baumgartner"),
-                    person("Lorenzo", "Bussetti")),
+                    person("Lorenzo", "Bussetto")),
          year = year,
          url = "https://github.com/petzi53/bib2academic/",
          textVersion = paste(
-             "Baumgartner, P.; Busseti, L.(",
+             "Baumgartner, P.; Busseto, L.(",
              year, ").  bib2academic: Convert BibTex to Markdown for the Hugo Academic Theme. ",
              vers, ". https://github.com/petzi53/bib2academic.", sep = "")
          )
