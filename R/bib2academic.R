@@ -5,9 +5,9 @@
 #' (\url{https://sourcethemes.com/academic/})
 #'
 #' @param bibfile A string in the format "path/to/bibfile": required
-#' @param copybib   Logical, optional
-#' @param abstract  Logical, optional
-#' @param overwrite Logical, optional
+#' @param copybib   Logical, optional, default = TRUE
+#' @param abstract  Logical, optional, default = TRUE
+#' @param overwrite Logical, optional, default = FALSE
 #'
 #' @return NULL
 #'
@@ -23,7 +23,7 @@
 
 #' @export
 bib2acad <- function(bibfile = "",
-                     copybib = FALSE,
+                     copybib = TRUE,
                      abstract = TRUE,
                      overwrite = FALSE) {
 

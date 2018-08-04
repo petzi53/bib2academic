@@ -1,0 +1,22 @@
+## -*- R -*-
+citHeader("To cite the R package 'bib2academic' in publications use:")
+
+year <- sub("-.*", "", meta$Date)
+vers <- paste("R package version", meta$Version)
+
+citEntry(entry	= "Manual",
+         title	= "bib2academic: Convert BibTex to Markdown for the Hugo Academic Theme",
+         Authors@R: as.person(c(
+             "Peter Baumgartner <peter.baumgartner@icloud.com> [aut, cre]",
+             "Lorenzo Busseti <lbusett@gmail.com> [ctb]"
+         )),
+         year = year,
+         # note = paste(vers,"---",
+         #              "For new features, see the 'Changelog' file (in the package source)"),
+         ## FIXME:  rather give the URL to the manual on CRAN ???
+         ##	   url = "http://stat.ethz.ch/CRAN/src/contrib/........",
+         # textVersion = paste(
+         #     "Maechler, M., Rousseeuw, P., Struyf, A., Hubert, M., Hornik, K.(",
+         #     year, ").  cluster: Cluster Analysis Basics and Extensions. ",
+         #     vers, ".", sep = "")
+         )

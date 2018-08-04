@@ -4,17 +4,17 @@
 \alias{bib2acad}
 \title{Convert .bib Files to .md Files for the Hugo Academic Theme}
 \usage{
-bib2acad(bibfile = "", copybib = FALSE, abstract = TRUE,
+bib2acad(bibfile = "", copybib = TRUE, abstract = TRUE,
   overwrite = FALSE)
 }
 \arguments{
 \item{bibfile}{A string in the format "path/to/bibfile": required}
 
-\item{copybib}{Logical, optional}
+\item{copybib}{Logical, optional, default = TRUE}
 
-\item{abstract}{Logical, optional}
+\item{abstract}{Logical, optional, default = TRUE}
 
-\item{overwrite}{Logical, optional}
+\item{overwrite}{Logical, optional, default = FALSE}
 }
 \description{
 \code{bib2acad} takes a .bib file and covert it to a .md file for the

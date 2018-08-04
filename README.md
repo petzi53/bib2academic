@@ -2,7 +2,7 @@
 
 bib2academic: Converting Bibtex Records to .md Files for the Hugo Academic Theme
 
-`bib2academic` takes a .bib file and generates for each record a .md file. The name of the .md file is generated from the year and entry field. It has the format `year-month-day_key.md`.
+`bib2academic` takes a .bib file and generates for each bib record a .md file. The name of the .md file is generated from the year and entry field. It has the format `year-month-day_key.md`.
 
 ## Requirements:
 
@@ -11,17 +11,17 @@ bib2academic: Converting Bibtex Records to .md Files for the Hugo Academic Theme
 
 ## Preparations:
 
-+ You need to put you .bib file on the top level of your project directory.
++ You need to put you .bib file on the top level of your project directory or to figure out the path.
 
-This conversion utility does not use the folders where the new file finally will finally live, e.g. `content/publication/` resp. `static/files/citations/. It is easier to recover you  work if something goes wrong in the conversion process. You don't have to search the new generated files in your working folders, you just can empty or delete newly generated folders.
+This conversion utility does not use the folders where the new files will finally live, e.g. `content/publication/` resp. `static/files/citations/. It is easier to recover you  work if something goes wrong in the conversion process. For instance: You don't have to search the new generated files in your working folders, you just can empty or delete newly generated folders.
 
 ## Call the `bib2acad` function:
 
-**The minimum call is:** `bib2acad("<bibfilename.ext>")`.
+**The minimum call is:** `bib2acad("<your/path/to/bibfilename>.bib")`.
 
-This generates two folders `my-md-folder` and `my-bib-folder` where the two types of generated files will be put.
+This generates two folders in your working directory with the names `my-md-folder` and `my-bib-folder`. In these two folder will the generated new .md and .bib files collected.
 
-**The maximum call is:** `bib2acad("<bibfilename.ext>", copybib = TRUE, abstract = TRUE, overwrite = TRUE)`.
+**The maximum call is:** `bib2acad("<your/path/to/bibfilename>.bib", copybib = TRUE, abstract = TRUE, overwrite = TRUE)`.
 
 This generates the .md files with abstracts, generates also .bib files and does  overwrite files already generated in both folders (.md and .bib folder). This is not dangerous when you are working with folders especially created for this conversion process. To have more control you can change these parameters. Default values are: 
 
