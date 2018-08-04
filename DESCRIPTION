@@ -10,6 +10,7 @@ Description: Convert records of a BibTeX file (.bib) to separate .md files
     for the publications folder of the Hugo Academic Theme. Store optionally
     also each record as a separate .bib file for the '/static/files/citations' 
     folder.
+Roxygen: list(markdown = TRUE)
 Date: 2018-08-04
 Contact: Peter Baumgartner <peter.baumgartner@icloud.com>
 URL: https://github.com/petzi53/bib2academic
