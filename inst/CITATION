@@ -11,7 +11,7 @@ citEntry(entry	= "Manual",
          year = year,
          url = "https://github.com/petzi53/bib2academic/",
          textVersion = paste(
-             "Baumgartner, P.; Busseto, L.(",
+             "Baumgartner, P.; Bussetto, L.(",
              year, ").  bib2academic: Convert BibTex to Markdown for the Hugo Academic Theme. ",
              vers, ". https://github.com/petzi53/bib2academic.", sep = "")
          )
