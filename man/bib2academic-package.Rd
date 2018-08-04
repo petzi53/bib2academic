@@ -3,10 +3,10 @@
 \docType{package}
 \name{bib2academic-package}
 \alias{bib2academic-package}
-\title{bib2academic: A Package for Converting Bibtex Records to .md Files
+\title{bib2academic: Converting Bibtex Records to .md Files
   for the Hugo Academic Theme}
 \description{
-The bib2academic packages takes a .bib file and generates for each
+\code{bib2academic} takes a .bib file and generates for each
 record a .md file. The name of the .md file is generated from
 the year and entry field. It has the format \code{year-month-day_key.md}
 }

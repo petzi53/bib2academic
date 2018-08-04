@@ -5,67 +5,44 @@
 #' (\url{https://sourcethemes.com/academic/})
 #'
 #' @param bibfile A string in the format "path/to/bibfile": required
-#' @param outfold A string in the format "path/to/outfold": required,
-#'   the folder must exist
-#' @param bibfold A string "path/to/bibfold": optional,
-#'   if used: the folder must exist
 #' @param copybib   Logical, optional
 #' @param abstract  Logical, optional
 #' @param overwrite Logical, optional
 #'
 #' @return NULL
 #'
-# Peter Baumgartner, July, 2018
-# License: href="http://creativecommons.org/licenses/by/4.0/"
-# General structure and idea taken from Lorenzo Busetto
-# https://lbusettspatialr.blogspot.com/2018/03/automatically-importing-publications.html
-# my changes:
-# - changed instead of `document_type` which results in an error, I used `bibtype`:
-#       the columname RefMangeR creates
-# - instead of the generation of the filename from date + 20 char. from titel I used:
-#       date + bibtex key
-# - added booktitle as legitime, so the program not only works with œarticle but also
-#       with @book, @booklet, @conference, @incollection, @inproceedings
-#       but not with @inbook (replace @inbook with @incollection and delete field chapter)
-# - I added an extra utility for gnerating bibTex files for every entry
-#       with the same generated name (This can be used in the folder /static/files/citation.
-#       This generates automatically the button `cite` which open the bibTex code
-#       for copying or downloading.
-# - I added an utility for cleaned up inline text
-# - I added a progressbar: important with many bib records
-#
-# Source this file and call the conversion utility with:
-#
-# bib2acad(bibfile   = "path/to/my_bibfile",
-#          outfold   = "path/to/my_md_folder",
-#          bibfold   = "path/to/my_bib_folder", # optional: default = ""
-#          copybib   = TRUE, # optional: default = FALSE
-#          abstract  = TRUE, # optional: default = FALSE
-#          overwrite = TRUE) # optional: default = FALSE
-#
-# if copybib is TRUE then bibfold has to have the path to a folder.
-# all folders have to be existent (created), before the program runs.
-
-
-
+#' @importFrom dplyr mutate case_when
+#' @importFrom RefManageR ReadBib WriteBib as.BibEntry
+#' @importFrom pbapply startpb closepb
+#' @importFrom stringr str_replace_all str_squish
+#' @importFrom stringi stri_trans_general
+#' @importFrom anytime anydate
+#' @importFrom magrittr %>%
+#'
 ################################################################################
+
+#' @export
 bib2acad <- function(bibfile = "",
-                     outfold = "",
-                     bibfold = "",
                      copybib = FALSE,
                      abstract = TRUE,
                      overwrite = FALSE) {
 
-    require(RefManageR)
-    require(dplyr)
-    require(stringr)
-    require(anytime)
-    require(pbapply)
+    msg1 <- "You must specify a .bib file as input for the conversion."
+    msg2 <- paste0("Cannot find file '", bibfile,
+                   "'. Check path and/or file name.")
+    if (bibfile == "") {return(message(msg1))}
+    if (!file.exists(bibfile)) {return(message(msg2))}
+    outfold <- "my-md-folder"
+    if (copybib) {bibfold <- "my-bib-folder"}
+
+    # create folders the brutal way; do not worry if they alreday exist
+    dir.create("my-md-folder", showWarnings = FALSE)
+    dir.create("my-bib-folder", showWarnings = FALSE)
 
 
-    # Import the bibtex file and convert to data.frame
-    mypubs   <- ReadBib(bibfile, check = "warn", .Encoding = "UTF-8") %>%
-        as.data.frame()
+    # Import the bibtex file and convert it to a data.frame
+    mypubs   <- RefManageR::ReadBib(bibfile, check = "warn", .Encoding = "UTF-8")
+    mypubs <- as.data.frame(mypubs)
     mypubs$key <- rownames(mypubs)
 
 
@@ -102,19 +79,19 @@ bib2acad <- function(bibfile = "",
         filename_md <- paste0(x[["date"]], "_", x[["key"]], ".md")
 
         # start writing
+
         if (!file.exists(file.path(outfold, filename_md)) | overwrite) {
             fileConn <- file.path(outfold, filename_md)
             write("+++", fileConn)
 
-            # Title and date
+            # title and date
             # title has sometimes with older bibTex files special characters "{}"
             # escape " and \ (e.g. the "ampersand"\&) with funtion escapeStr
 
-
-            write(paste0("title = \"", cleanStr(x[["title"]]), "\""), fileConn, append = T)
-            # write(paste0("title = \"",
-            #              gsub("[{}]", '', x[["title"]]), "\""), fileConn, append = T)
-            write(paste0("date = \"", anydate(x[["date"]]), "\""), fileConn, append = T)
+            write(paste0("title = \"", cleanStr(x[["title"]]), "\""),
+                  fileConn, append = T)
+            write(paste0("date = \"", anytime::anydate(x[["date"]]), "\""),
+                  fileConn, append = T)
 
             # Publication type. Legend:
             # 0 = Uncategorized, 1 = Conference paper, 2 = Journal article
@@ -124,15 +101,21 @@ bib2acad <- function(bibfile = "",
 
 
             if (!is.na(x[["author"]])) {
-                # Authors. Comma separated list, e.g. `["Bob Smith", "David Jones"]`.
-                authors <- str_replace_all(str_squish(x["author"]), " and ", "\", \"")
+                # Authors. Comma separated list, e.g.
+                # `["Bob Smith", "David Jones"]`.
+                authors <- stringr::str_replace_all(
+                    stringr::str_squish(x["author"]), " and ", "\", \"")
                 authors <- stringi::stri_trans_general(authors, "latin-ascii")
-                write(paste0("authors = [\"", authors,"\"]"), fileConn, append = T)
+                write(paste0("authors = [\"", authors,"\"]"),
+                      fileConn, append = T)
             } else {
-                # Editors. Comma separated list, e.g. `["Bob Smith", "David Jones"]`.
-                editors <- str_replace_all(str_squish(x["editor"]), " and ", "\", \"")
+                # Editors. Comma separated list, e.g.
+                # `["Bob Smith", "David Jones"]`.
+                editors <- stringr::str_replace_all(
+                    stringr::str_squish(x["editor"]), " and ", "\", \"")
                 editors <- stringi::stri_trans_general(editors, "latin-ascii")
-                write(paste0("editors = [\"", editors,"\"]"), fileConn, append = T)
+                write(paste0("editors = [\"", editors,"\"]"),
+                      fileConn, append = T)
             }
 
 
@@ -143,7 +126,7 @@ bib2acad <- function(bibfile = "",
             # if journal, then: journal, check if volume, number, pages
             # check first if field is available and then if it is.na
             # only if both conditions are satiesfied: write field content
-            # NOTE: Keep in mind that this will not generate a complete citation record
+            # NOTE: This will not generate a complete citation record
             # NOTE: Only summary information providing links to detailed infos
             # NOTE: One of these infos is to see & copy the complete bib record
 
@@ -151,54 +134,68 @@ bib2acad <- function(bibfile = "",
             publication <- NULL # variable to collect data and to write it to file
 
             if ("booktitle" %in% names(x) && !is.na(x[["booktitle"]])) {
-                publication <- paste0(publication, "In: ", cleanStr(x[["booktitle"]]))
+                publication <- paste0(publication,
+                                      "In: ", cleanStr(x[["booktitle"]]))
                 if ("publisher" %in% names(x) && !is.na(x[["publisher"]])) {
-                    publication <- paste0(publication, ", ", cleanStr(x[["publisher"]]))
+                    publication <- paste0(publication, ", ",
+                                          cleanStr(x[["publisher"]]))
                 }
                 if ("address" %in% names(x) && !is.na(x[["address"]])) {
-                    publication <- paste0(publication, ", ", cleanStr(x[["address"]]))
+                    publication <- paste0(publication, ", ",
+                                          cleanStr(x[["address"]]))
                 }
                 if ("pages" %in% names(x) && !is.na(x[["pages"]])) {
-                    publication <- paste0(publication, ", _pp. ", cleanStr(x[["pages"]]), "_")
+                    publication <- paste0(publication, ", _pp. ",
+                                          cleanStr(x[["pages"]]), "_")
                 }
             }
 
             if ("journal" %in% names(x) && !is.na(x[["journal"]])) {
-                publication <- paste0(publication, "In: ", cleanStr(x[["journal"]]))
+                publication <- paste0(publication, "In: ",
+                                      cleanStr(x[["journal"]]))
                 if ("volume" %in% names(x) && !is.na(x[["volume"]])) {
-                    publication <- paste0(publication, ", (", cleanStr(x[["volume"]]), ")")
+                    publication <- paste0(publication, ", (",
+                                          cleanStr(x[["volume"]]), ")")
                 }
                 if ("number" %in% names(x) && !is.na(x[["number"]])) {
-                    publication <- paste0(publication, ", ", cleanStr(x[["number"]]))
+                    publication <- paste0(publication, ", ",
+                                          cleanStr(x[["number"]]))
                 }
                 if ("pages" %in% names(x) && !is.na(x[["pages"]])) {
-                    publication <- paste0(publication, ", _pp. ", cleanStr(x[["pages"]]), "_")
+                    publication <- paste0(publication, ", _pp. ",
+                                          cleanStr(x[["pages"]]), "_")
                 }
                 if ("doi" %in% names(x) && !is.na(x[["doi"]])) {
-                    publication <- paste0(publication, ", ", paste0("https://doi.org/",
-                                                                    cleanStr(x[["doi"]])))
+                    publication <- paste0(publication, ", ",
+                                          paste0("https://doi.org/",
+                                                 cleanStr(x[["doi"]])))
                 }
                 if ("url" %in% names(x) && !is.na(x[["url"]])) {
-                    publication <- paste0(publication, ", ",  cleanStr(x[["url"]]))
+                    publication <- paste0(publication, ", ",
+                                          cleanStr(x[["url"]]))
                 }
 
 
             }
 
-            write(paste0("publication = \"", publication, "\""), fileConn, append = T)
+            write(paste0("publication = \"", publication, "\""),
+                  fileConn, append = T)
 
             # Abstract and optional shortened version.
-            if ( (abstract) && "abstract" %in% names(x) && !is.na(x[["abstract"]]))
+            if ((abstract) && "abstract" %in% names(x)
+                && !is.na(x[["abstract"]]))
             {
-                write(paste0("abstract = \"", cleanStr(x[["abstract"]]), "\""), fileConn, append = T)
+                write(paste0("abstract = \"", cleanStr(x[["abstract"]]), "\""),
+                      fileConn, append = T)
             } else {
                 write("abstract = \"\"", fileConn, append = T)
             }
-            write(paste0("abstract_short = \"","\""), fileConn, append = T)
+            write(paste0("abstract_short = \"","\""),
+                  fileConn, append = T)
 
 
-            # other possible fields are kept empty. They can be customized later by
-            # editing the created md
+            # other possible fields are kept empty.
+            # They can be customized later by editing the created md
 
             write("image_preview = \"\"", fileConn, append = T)
             write("selected = false", fileConn, append = T)
@@ -229,15 +226,17 @@ bib2acad <- function(bibfile = "",
         }
         # write bibTex Data into separate file
         # these bib files can be stored under "static/files/citations"
-        # then a button "cite" is generated automatically in the academic framework
+        # then a button "cite" is generated automatically
+        # in the academic framework
         if (copybib) {
             filename_bib <- (gsub(".md", ".bib", filename_md))
             y <- as.list(x)
             y["pubtype"] <- NULL
-            y <- as.BibEntry(y)
+            y <- RefManageR::as.BibEntry(y)
             if (!file.exists(file.path(bibfold, filename_bib)) | overwrite) {
                 RefManageR::WriteBib(y,
-                        file = file.path(bibfold, filename_bib), verbose = FALSE)
+                        file = file.path(bibfold, filename_bib),
+                        verbose = FALSE)
             }
         }
     }
@@ -245,9 +244,9 @@ bib2acad <- function(bibfile = "",
     # apply the "create_md" function over the publications list to generate
     # the different "md" files.
 
-    pb <- startpb(min = 0, max = nrow(mypubs))
-    pbapply(mypubs, FUN = function(x) create_md(x), MARGIN = 1)
-    closepb(pb)
+    pb <- pbapply::startpb(min = 0, max = nrow(mypubs))
+    pbapply::pbapply(mypubs, FUN = function(x) create_md(x), MARGIN = 1)
+    pbapply::closepb(pb)
 
 }
 
@@ -258,7 +257,8 @@ cleanStr <- function(str) {
     str <- gsub("[{}]", '', str)
     # replace all inline quotes '"' with "four '\\\\"'
     str <- gsub('"', '\\\\"', str)
-    # delete extra lines, tabs and spaces; especially important with field 'abstract'
+    # delete extra lines, tabs and spaces
+    # (especially important with field 'abstract')
     # and return the cleaned string
     return(stringr::str_squish(str))
 }

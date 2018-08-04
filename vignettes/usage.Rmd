@@ -25,32 +25,35 @@ knitr::opts_chunk$set(
 
 ## Preparations:
 
-+ You need to create a folder where the created .md files should go.
-+ If you also want to create for each bibtex record a .bib file, then you need to create a second folder for these files.
++ You need to put you .bib file on the top level of your project directory.
 
-I recommend not to use the folders where these file finally will live, e.g. `content/publication/` resp. `static/files/citations/. It is easier to recover you  work if something goes wrong in the conversion process. You don't have to search the generated files in your working folders, you just can empty or delete newly generated folders.
+This conversion utility does not use the folders where the new file finally will finally live, e.g. `content/publication/` resp. `static/files/citations/. It is easier to recover you  work if something goes wrong in the conversion process. You don't have to search the new generated files in your working folders, you just can empty or delete newly generated folders.
 
 ## Call the `bib2acad` function:
 
-**The minimum call is:** `bib2acad("path/to/bibfile", "path/to/outfold")`.
+**The minimum call is:** `bib2acad("<bibfilename.ext>")`.
 
-This generates the .md files with abstracts included and does not overwrite any files already in your folder `outfold`.
+This generates two folders `my-md-folder` and `my-bib-folder` where the two types of generated files will be put.
 
-**The maximum call is:** `bib2acad("path/to/bibfile", "path/to/outfold", "path/to/bibfold", copybib = "path/to/bibfold", abstract = TRUE, overwrite = TRUE)`.
+**The maximum call is:** `bib2acad("<bibfilename.ext>", copybib = TRUE, abstract = TRUE, overwrite = TRUE)`.
 
-This generates the .md files with abstracts, generates also .bib files and does  overwrite files already generated in both folders (.md and .bib folder). This is not dangerous when you are working with folders especially created for this conversion process.
+This generates the .md files with abstracts, generates also .bib files and does  overwrite files already generated in both folders (.md and .bib folder). This is not dangerous when you are working with folders especially created for this conversion process. To have more control you can change these parameters. Default values are: 
 
-For many files the conversion procedure may take some time. I have included a progressbar so that you can see if the program is working. For my 190 bibtex records the program the procedure needed about 45 seconds.
++ copybib = TRUE
++ abstract = TRUE
++ overwrite = FALSE
+
+For many records in your .bib file the conversion procedure may take some time. I have included a progressbar so that you can see if the program is working. For my 190 bibtex records the procedure needed about 45 seconds on my MacBook Pro, 2,9 GHz Intel, 8GB RAM.
 
 ## Install the conversion results:
 
 If everything went smoothly make a copy of your `static/files/citations/` and `content/publication` folder. Then copy your .bib files into `static/files/citations/` and your .md files into `content/publication`.
 
-To test if everything ic converted corretly you must rebuild the website. Call  the menu "Build -> More… -> Clean All" (or CTRL/CMD-SHIFT-B). Wait until the website is cleaned then call `blogdown:::serve:site()` or - if you have RStudio Addins installed: CTRL-S.
+To test if everything ic converted corretly you must rebuild the website. Call  the menu "Build -> More… -> Clean All" (or CTRL/CMD-SHIFT-B). Wait until the website is cleaned then call `blogdown:::serve:site()` or - if you have RStudio Addins installed: `CTRL-S`.
 
-Now your new data should be available.
+Now your new publication files should be available on your website.
 
-## Error handling:
+## Trouble shooting:
 
 If you can't seen anymore your website but the directory index then something went wrong in the conversion procedure. The problem is that there is no error message in blogdown. You have to change to the terminal and call
 
@@ -68,12 +71,12 @@ only the following escape characters are allowed:
 \b, \t, \n, \f, \r, \", \\,\uXXXX, and \UXXXXXXXX   
 for publication/2018-01-01_baumgartner_dataliteracy_2018.md
 ```
-This means that hugo has found in the .md file an invalid character. In this case it was the ampersand. Go to the file and look for the specified line (in my case in line 5). Then you will see something like `\<special character>` (in my case: `\&`). Add another backlash. e.g. changing to `\\<special character>` (in my case: `\\&`).
+This means that hugo has found in the .md file an invalid character. In this case it was the ampersand. Go to the file and look for the specified line (in my case it is line 5). Then you will see something like `\<special character>` (in my case: `\&`). Add another backlash. e.g. changing to `\\<special character>` (in my case: `\\&`).
 
-The above example will now work out because I have added some error handling routines. But still there is a change that other invalid characters throw errors. My suggestion:
+The above example will now work out because I have added some error handling routines. But still there is a chance that other invalid characters throw errors. My suggestion:
 
-1. Try to find and fix the problem in the file. Check it if everthing is ok now with rebuilding your website followend by serve_site().
-2. If you can't find the error most of the time problems appear in the `abstract` field. Try to delete this field (or repeat the conversion procedure with ´abstract = FALSE`). Again: Check it if everthing is ok now with rebuilding your website followend by serve_site().
-3. If the error still persists try to delete the file(s) your are suspecting to throw the error. And again: check if this was the problem with with rebuilding your website followend by serve_site(). This last procedure should help you to limit the problems to one or some files.
+1. Try to find and fix the problem in the file. Check it if everthing is ok now with rebuilding your website followend by `blogdown:::serve_site()`.
+2. If you can't find the error most of the time problems appear in the `abstract` field of one of your .md files. Try to delete this field (or repeat the conversion procedure with `abstract = FALSE`). Again: Check if everthing is ok now with rebuilding your website followend by `blogdown:::serve_site()`.
+3. If the error still persists try to delete the file(s) your are suspecting to throw the error. And again: check if this was the problem. This last procedure should help you to limit the problems to one or only some files.
 4. If you could detect the error please [give me feedback](https://github.com/petzi53/bib2academic/issues/new) so that I could include an error handling routine for these cases. 
-5. If you cannot find the error please [open an issue on my GitHub site](https://github.com/petzi53/bib2academic/issues/new) and send my the files where you assume that the problems are generated.
+5. If you cannot find the error please [open an issue on my GitHub site](https://github.com/petzi53/bib2academic/issues/new) and send me the .bib records where you assume that the problems were originated.

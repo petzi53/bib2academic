@@ -1,14 +1,14 @@
 Package: bib2academic
 Type: Package
 Title: Convert BibTex to Markdown for the Hugo Academic Theme
-Version: 0.1.0
+Version: 0.0.0.9000
 Authors@R: as.person(c(
     "Peter Baumgartner <peter.baumgartner@icloud.com> [aut, cre]", 
     "Lorenzo Busseti <lbusett@gmail.com> [ctb]"
   ))
 Description: Convert records of a BibTeX file (.bib) to separate .md files
     for the publications folder of the Hugo Academic Theme. Store optionally
-    also each record as a separate .bib file for the /static/files/citations 
+    also each record as a separate .bib file for the '/static/files/citations' 
     folder.
 URL: https://github.com/petzi53/bib2academic
 BugReports: http://github.com/petzi53/bib2academic/issues
@@ -18,5 +18,5 @@ LazyData: true
 RoxygenNote: 6.1.0
 Suggests: knitr,
     rmarkdown,
-    testthat
+    magrittr
 VignetteBuilder: knitr
