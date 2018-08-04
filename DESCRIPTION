@@ -20,3 +20,10 @@ Suggests: knitr,
     rmarkdown,
     magrittr
 VignetteBuilder: knitr
+Imports: dplyr,
+    RefManageR,
+    anytime,
+    magrittr,
+    pbapply,
+    stringi,
+    stringr
