@@ -16,8 +16,6 @@
 #' @importFrom pbapply startpb closepb
 #' @importFrom stringr str_replace_all str_squish
 #' @importFrom stringi stri_trans_general
-#' @importFrom anytime anydate
-#' @importFrom magrittr %>%
 #'
 ################################################################################
 
@@ -47,8 +45,7 @@ bib2acad <- function(bibfile = "",
 
 
     # assign "categories" to the different types of publications
-    mypubs   <- mypubs %>%
-        dplyr::mutate(
+    mypubs   <- dplyr::mutate(mypubs,
             pubtype = dplyr::case_when(bibtype == "Article" ~ "2",
                                        bibtype == "Article in Press" ~ "2",
                                        bibtype == "InProceedings" ~ "1",
@@ -63,12 +60,12 @@ bib2acad <- function(bibfile = "",
                                        bibtype == "InCollection" ~ "6",
                                        bibtype == "InBook" ~ "6",
                                        bibtype == "Misc" ~ "0",
-                                       TRUE ~ "0"))
+                                       TRUE ~ "0")
+                            )
     # create a function which populates the md template based on the info
     # about a publication
 
     create_md <- function(x) {
-
         # define a date and create filename_md by appending date and bibTex key
         if (!is.na(x[["year"]])) {
             x[["date"]] <- paste0(x[["year"]], "-01-01")
@@ -90,7 +87,7 @@ bib2acad <- function(bibfile = "",
 
             write(paste0("title = \"", cleanStr(x[["title"]]), "\""),
                   fileConn, append = T)
-            write(paste0("date = \"", anytime::anydate(x[["date"]]), "\""),
+            write(paste0("date = \"", x[["date"]], "\""),
                   fileConn, append = T)
 
             # Publication type. Legend:

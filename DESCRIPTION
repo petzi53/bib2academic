@@ -1,7 +1,7 @@
 Package: bib2academic
 Type: Package
 Title: Convert BibTex to Markdown for the Hugo Academic Theme
-Version: 0.0.0.9000
+Version: 0.1.0.99
 Authors@R: as.person(c(
     "Peter Baumgartner <peter.baumgartner@icloud.com> [aut, cre]", 
     "Lorenzo Busseti <lbusett@gmail.com> [ctb]"
@@ -19,14 +19,11 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0
 Suggests: knitr,
-    rmarkdown,
-    magrittr
+    rmarkdown
 VignetteBuilder: knitr,
     rmarkdown
 Imports: dplyr,
     RefManageR,
-    anytime,
-    magrittr,
     pbapply,
     stringi,
     stringr

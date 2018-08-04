@@ -6,17 +6,12 @@ vers <- paste("R package version", meta$Version)
 
 citEntry(entry	= "Manual",
          title	= "bib2academic: Convert BibTex to Markdown for the Hugo Academic Theme",
-         Authors@R: as.person(c(
-             "Peter Baumgartner <peter.baumgartner@icloud.com> [aut, cre]",
-             "Lorenzo Busseti <lbusett@gmail.com> [ctb]"
-         )),
+         author = c(person("Peter", "Baumgartner"),
+                    person("Lorenzo", "Bussetti")),
          year = year,
-         # note = paste(vers,"---",
-         #              "For new features, see the 'Changelog' file (in the package source)"),
-         ## FIXME:  rather give the URL to the manual on CRAN ???
-         ##	   url = "http://stat.ethz.ch/CRAN/src/contrib/........",
-         # textVersion = paste(
-         #     "Maechler, M., Rousseeuw, P., Struyf, A., Hubert, M., Hornik, K.(",
-         #     year, ").  cluster: Cluster Analysis Basics and Extensions. ",
-         #     vers, ".", sep = "")
+         url = "https://github.com/petzi53/bib2academic/",
+         textVersion = paste(
+             "Baumgartner, P.; Busseti, L.(",
+             year, ").  bib2academic: Convert BibTex to Markdown for the Hugo Academic Theme. ",
+             vers, ". https://github.com/petzi53/bib2academic.", sep = "")
          )
