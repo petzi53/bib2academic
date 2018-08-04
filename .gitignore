@@ -3,7 +3,6 @@
 .RData
 .Ruserdata
 packrat/lib*/
-inst/doc
 gesamt.bib
 my-bib-folder
 my-md-folder
