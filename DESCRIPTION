@@ -1,7 +1,7 @@
 Package: bib2academic
 Type: Package
 Title: Convert BibTex to Markdown for the Hugo Academic Theme
-Version: 0.1.0.99
+Version: 0.1.1.99
 Authors@R: as.person(c(
     "Peter Baumgartner <peter.baumgartner@icloud.com> [aut, cre]", 
     "Lorenzo Busseto <lbusett@gmail.com> [ctb]"
