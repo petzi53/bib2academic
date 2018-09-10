@@ -1,6 +1,7 @@
 # bib2academic
 
 bib2academic: Converting Bibtex Records to .md Files for the Hugo Academic Theme
+[![DOI](https://zenodo.org/badge/143297557.svg)](https://zenodo.org/badge/latestdoi/143297557)
 
 `bib2academic` takes a .bib file and generates for each bib record a .md file. The name of the .md file is generated from the year and entry field. It has the format `year-month-day_key.md`.
 
